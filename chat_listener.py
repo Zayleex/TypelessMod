@@ -33,10 +33,11 @@ class ChatListener:
                     self.socket.send(f"PONG {data}\r\n".encode())
                     continue
                 if "PRIVMSG" in line:
-                    username = self.get_chatter(line)
+                    chatter = self.get_chatter(line)
                     message = self.get_message(line)
                     streamer = self.get_streamer(line)
-                    print(f"Username: {username}, Message: {message}, Streamer: {streamer} ")
+                    print(f"Chatter: {chatter}, Message: {message}, Streamer: {streamer} ")
+                    self.add_to_dict(streamer, chatter)
 
 
     def remove_streamer(self, streamer: str):
@@ -74,10 +75,12 @@ class ChatListener:
         streamer = data.split("#")[1].split(" ")[0]
         return streamer
 
-    def add_to_dict(self, streamer:str, chatter:str):
+    def add_to_dict(self, streamer:str, chatter :str):
         chatter_list = self.chatter_list[chatter]
         if not chatter_list:
             chatter_list = []
+        if chatter in chatter_list:
+            chatter_list.remove(chatter)
         if chatter_list >= self.amount_tracked_chatter:
             chatter_list.remove(chatter_list[0])
         chatter_list.append(chatter)
