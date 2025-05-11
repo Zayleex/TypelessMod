@@ -20,7 +20,13 @@ class SocketManager:
                 chat_listener.add_streamer(steamer)
                 print("Joined streamer: ", steamer)
 
-
+    def assign_streamer(self, streamer: str):
+        print(f"{len(self.listeners)} amount of listeners!")
+        free_socket = self.check_free_socket()
+        if not free_socket:
+            free_socket = self.create_new_listener()
+        free_socket.add_streamer(streamer)
+        print(f"{streamer} got assigned!")
 
     def create_new_listener(self):
         chat_listener = ChatListener(self.config)
@@ -32,6 +38,12 @@ class SocketManager:
         for listener in self.listeners:
             if listener.streamer_count < 10:
                 return listener
+        return None
+
+    def get_chatter_list(self, streamer: str):
+        for listener in self.listeners:
+            if streamer in listener.streamers:
+                return listener.chatter_list[streamer]
         return None
 
 

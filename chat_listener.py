@@ -13,6 +13,9 @@ class ChatListener:
         self.streamers: list[str] = []
         self.streamer_count = 0
 
+        self.chatter_list = {}
+        self.amount_tracked_chatter = 100
+
     def connect(self):
         access_token = self.config["access_token"]
         self.socket.connect((self.url, self.port))
@@ -33,7 +36,7 @@ class ChatListener:
                     username = self.get_chatter(line)
                     message = self.get_message(line)
                     streamer = self.get_streamer(line)
-                    ##print(f"Username: {username}, Message: {message}, Streamer: {streamer} ")
+                    print(f"Username: {username}, Message: {message}, Streamer: {streamer} ")
 
 
     def remove_streamer(self, streamer: str):
@@ -70,3 +73,11 @@ class ChatListener:
     def get_streamer(data):
         streamer = data.split("#")[1].split(" ")[0]
         return streamer
+
+    def add_to_dict(self, streamer:str, chatter:str):
+        chatter_list = self.chatter_list[chatter]
+        if not chatter_list:
+            chatter_list = []
+        if chatter_list >= self.amount_tracked_chatter:
+            chatter_list.remove(chatter_list[0])
+        chatter_list.append(chatter)
