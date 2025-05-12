@@ -9,7 +9,6 @@ logger = Logger("Logs")
 
 top_streamer = data.top_streamer[0:21]
 
-
 socket_manager = SocketManager(top_streamer ,config)
 socket_manager.initialize()
 socket_manager.assign_streamer("zayleex")
